@@ -67,7 +67,7 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		local xPlayer = ESX.GetPlayerFromId(target)
 
 		local data = {
-			name       = GetPlayerName(source),
+			name       = GetPlayerName(target),
 			job        = xPlayer.job,
 			inventory  = xPlayer.inventory,
 			accounts   = xPlayer.accounts,
@@ -75,7 +75,11 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 		}
 
 		TriggerEvent('esx_status:getStatus', _source, 'drunk', function(status)
-			data.drunk = status:getPercent()
+
+			if status ~= nil then
+				data.drunk = status.getPercent()
+			end
+			
 		end)
 
 		TriggerEvent('esx_license:getLicenses', _source, function(licenses)

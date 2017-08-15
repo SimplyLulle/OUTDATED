@@ -44,6 +44,8 @@ Locales['fr'] = {
 		['cone'] = 'plot',
 		['barrier'] = 'barrière',
 		['spikestrips'] = 'herse',
+		['box'] = 'caisse',
+		['cash'] = 'caisse',
 	--ID Card Menu
 		['name'] = 'nom : ',
 		['bac'] = 'alcoolémie : ',

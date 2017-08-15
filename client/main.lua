@@ -44,9 +44,9 @@ function SetVehicleMaxMods(vehicle)
 	ESX.Game.SetVehicleProperties(vehicle, props)
 
 end
-local hashSkin = GetHashKey("mp_m_freemode_01")
+
 function OpenCloakroomMenu()
-local ped = GetPlayerPed(-1)
+
 	ESX.UI.Menu.CloseAll()
 
 	ESX.UI.Menu.Open(
