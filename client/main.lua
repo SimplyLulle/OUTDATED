@@ -11,6 +11,7 @@ local Keys = {
 }
 
 ESX                             = nil
+local isInService = false
 local PlayerData                = {}
 local GUI                       = {}
 GUI.Time                        = 0
@@ -197,19 +198,37 @@ function OpenCloakroomMenu()
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
 				SetPedComponentVariation(GetPlayerPed(-1), 9, 10, 1, 2)--Gilet
+			    local playerPed = GetPlayerPed(-1)
+                SetPedArmour(playerPed, 100)
+                --SetEntityHealth(playerPed, 200)
+                ClearPedBloodDamage(playerPed)
+                ResetPedVisibleDamage(playerPed)
+                ClearPedLastWeaponDamage(playerPed)
 				end)
 
 			end
 
-			if data.current.value == 'gilet_wear' then
+			if data.current.value == 'veste_wear' then
 
+                ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
+                SetPedComponentVariation(GetPlayerPed(-1), 9, 10, 1, 2)--Gilet
 
+                end)
 
-				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
-					SetPedComponentVariation(GetPlayerPed(-1), 9, 14, 1, 2)--Sans Gilet
-				end)
+            end
 
-			end
+            if data.current.value == 'gilet_wear' then
+
+                ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function()
+                    SetPedComponentVariation(GetPlayerPed(-1), 9, 14, 1, 2)--Sans Gilet
+                    local playerPed = GetPlayerPed(-1)
+                    SetPedArmour(playerPed, 0)
+                    ClearPedBloodDamage(playerPed)
+                    ResetPedVisibleDamage(playerPed)
+                    ClearPedLastWeaponDamage(playerPed)
+                end)
+
+            end
 
 			if data.current.value == 'giletj_wear' then
 
@@ -369,8 +388,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
 				local playerPed = GetPlayerPed(-1)
 
-				if Config.MaxInService == -1 then
-
+				if Config.MaxInService == -1  then
 					ESX.Game.SpawnVehicle(model, {
 						x = vehicles[partNum].SpawnPoint.x, 
 						y = vehicles[partNum].SpawnPoint.y, 
@@ -381,9 +399,7 @@ function OpenVehicleSpawnerMenu(station, partNum)
 					end)
 
 				else
-
 					ESX.TriggerServerCallback('esx_service:enableService', function(canTakeService, maxInService, inServiceCount)
-
 						if canTakeService then
 
 							ESX.Game.SpawnVehicle(model, {
@@ -1565,6 +1581,13 @@ Citizen.CreateThread(function()
 
 			if IsControlPressed(0,  Keys['E']) and PlayerData.job ~= nil and PlayerData.job.name == 'police' and (GetGameTimer() - GUI.Time) > 150 then
 
+				if isInService then
+				TriggerServerEvent("player:serviceOff", "police")
+				else
+				TriggerServerEvent("player:serviceOn", "police")
+				end
+				isInService = not isInService
+
 				if CurrentAction == 'menu_cloakroom' then
 					OpenCloakroomMenu()
 				end
@@ -1588,6 +1611,7 @@ Citizen.CreateThread(function()
 						GetEntityModel(vehicle) == GetHashKey('policet')
 					then
 						TriggerServerEvent('esx_service:disableService', 'police')
+						
 					end
 					
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
