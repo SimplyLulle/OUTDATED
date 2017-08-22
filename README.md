@@ -31,20 +31,25 @@ start esx_policejob
    
    --[[
 #####################################################################################################
+CREATOR OF THIS MODS POLICE GUIZz THANKS TO YOU !
 Jobs Police V2 Modifier by Super.Cool.Ninja #FXServer
-UPDATE 15/08/2017 
+UPDATE 22/08/2017 
 [FR] [EN]
 #####################################################################################################
 --]]
 
 
 
-- News Optimisation envoie 1 requete au lieu de plusieur pour prendre sa tenue
 - Nouvelle Tenues par grades dispo ainsi que quelque options comme une casquette ou porter un gilet par balle ...
+- Nouvelle action disponible comme faire sortir le joueur d'un voiture, retirer son permis en item puis retirer son permis en code
 
+- Nouvelle langue ajoutée Portugais
+- New language added Portuguese
+- Novo idioma adicionado Português
 
-- News Optimization sends 1 request instead of several to take his outfit
 - New Outfits by grades available as well as some options like a cap or wear a bullet waistcoat ...
+
+- New action available such as getting the player out of a car, withdrawing his license in item and then withdrawing his license in code
 
 
 - Installation:

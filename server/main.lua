@@ -62,6 +62,24 @@ AddEventHandler('esx_policejob:putInVehicle', function(target)
 	TriggerClientEvent('esx_policejob:putInVehicle', target)
 end)
 
+RegisterServerEvent('esx_policejob:OutVehicle')
+AddEventHandler('esx_policejob:OutVehicle', function(target)
+    TriggerClientEvent('esx_policejob:OutVehicle', target)
+end)
+
+
+RegisterServerEvent('esx_policejob:code') --Lui retire son Code coter Bdd
+AddEventHandler('esx_policejob:code', function(playerId)
+local xPlayer = ESX.GetPlayerFromId(playerId) --Variable playerId sert a trouver Id du joueur proche.
+
+MySQL.Async.execute(
+		'UPDATE users SET DmvTest = "Required" WHERE identifier = @username', --Sert a update dans la base de donnée en Required
+		{
+			['@username']    = xPlayer.identifier
+		}
+	)
+end)
+
 ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, cb, target)
 
 		local xPlayer = ESX.GetPlayerFromId(target)
@@ -80,10 +98,6 @@ ESX.RegisterServerCallback('esx_policejob:getOtherPlayerData', function(source, 
 				data.drunk = status.getPercent()
 			end
 			
-		end)
-
-		TriggerEvent('esx_license:getLicenses', _source, function(licenses)
-			data.licenses = licenses
 		end)
 
 		cb(data)

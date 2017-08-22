@@ -1,16 +1,8 @@
 Locales['en'] = {
 	--Cloackroom
-		['cloakroom'] = 'cloakroom',
-		['citizen_wear'] = 'Civil Clothing',
-		['cadet_wear'] = 'Cadet outfit',
-		['police_wear'] = 'Police officer',
-		['sergent_wear'] = 'Holding Sergeant',
-		['lieutenant_wear'] = 'Holding Lieutenant',
-		['commandant_wear'] = 'Commanding Officer',
-		['veste_wear'] = 'Gilet by ball',
-		['gilet_wear'] = 'Remove Gilet By ball',
-		['giletj_wear'] = 'Yellow vest',
-		['rgiletj_wear'] = 'Remove Gilet jaune',
+		['cloakroom'] = 'locker room',
+		['citizen_wear'] = 'civilian Outfit',
+		['police_wear'] = 'police Outfit',
 		['open_cloackroom'] = 'press ~INPUT_CONTEXT~ to change',
 	--Armory
 		['get_weapon'] = 'get Weapon',
@@ -23,7 +15,7 @@ Locales['en'] = {
 		['vehicle_out'] = 'there is already a car out of the garage',
 		['vehicle_spawner'] = 'press ~INPUT_CONTEXT~ to take out a vehicle',
 		['store_vehicle'] = 'press ~INPUT_CONTEXT~ to store the vehicle',
-		['service_max'] = 'Max officers in service : ',
+		['service_max'] = 'Max officers in service: ',
 	--Action Menu
 		['citizen_interaction'] = 'citizen Interaction',
 		['vehicle_interaction'] = 'vehicle Interaction',
@@ -34,6 +26,7 @@ Locales['en'] = {
 		['handcuff'] = 'cuff / Uncuff',
 		['put_in_vehicle'] = 'put in Vehicle',
 		['fine'] = 'fine',
+		['code'] = 'remove license',
 		['no_players_nearby'] = 'no players nearby',
 
 		['vehicle_info'] = 'vehicle Info',
@@ -50,7 +43,7 @@ Locales['en'] = {
 		['name'] = 'name : ',
 		['bac'] = 'bAC : ',
 	--Body Search Menu
-		['confiscate_dirty'] = 'confiscate dirty money : $',
+		['confiscate_dirty'] = 'confiscate dirty money: $',
 		['guns_label'] = '--- Guns ---',
 		['confiscate'] = 'confiscate ',
 		['inventory_label'] = '--- Inventory ---',
@@ -60,11 +53,11 @@ Locales['en'] = {
 		['minor_offense'] = 'minor Offense',
 		['average_offense'] = 'average Offense',
 		['major_offense'] = 'major Offense',
-		['fine_total'] = 'fine : ',
+		['fine_total'] = 'fine: ',
 	--Vehicle Info Menu
 		['plate'] = 'Plate: ',
-		['owner_unknown'] = 'owner : Unknown',
-		['owner'] = 'owner : ',
+		['owner_unknown'] = 'owner: Unknown',
+		['owner'] = 'owner: ',
 	--Weapons Menus
 		['get_weapon_menu'] = 'armory - Take Weapon',
 		['put_weapon_menu'] = 'armory - Put Weapon',

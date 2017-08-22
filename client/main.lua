@@ -45,6 +45,14 @@ function SetVehicleMaxMods(vehicle)
 
 end
 
+function SendNotification(message)
+	SetNotificationTextEntry("STRING")
+	AddTextComponentString(message)
+	DrawNotification(false, false)
+end
+
+
+local hashSkin = GetHashKey("mp_m_freemode_01")
 function OpenCloakroomMenu()
 
 	ESX.UI.Menu.CloseAll()
@@ -68,21 +76,20 @@ function OpenCloakroomMenu()
 			},
 		},
 		function(data, menu)
-			
+			local ped = GetPlayerPed(-1)
 			menu.close()
 
 			if data.current.value == 'citizen_wear' then
 				
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-					TriggerEvent('skinchanger:loadSkin', skin)
+				TriggerEvent('skinchanger:loadSkin', skin)
 				end)
 
 			end
 
-			if data.current.value == 'cadet_wear' then
+			if data.current.value == 'cadet_wear' and PlayerData.job.grade_name == 'recruit' then --Ajout de tenue par grades
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
-
 					if skin.sex == 0 then
 						SetPedComponentVariation(GetPlayerPed(-1), 3, 30, 0, 0)--Gants
 						SetPedComponentVariation(GetPlayerPed(-1), 4, 35, 0, 0)--Jean
@@ -98,10 +105,9 @@ function OpenCloakroomMenu()
 					end
 					
 				end)
-
 			end
 
-			if data.current.value == 'police_wear' then
+			if data.current.value == 'police_wear' and PlayerData.job.grade_name == 'sergeant' then --Ajout de tenue par grades
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
@@ -123,7 +129,7 @@ function OpenCloakroomMenu()
 			end
 
 
-			if data.current.value == 'sergent_wear' then
+			if data.current.value == 'sergent_wear' and PlayerData.job.grade_name == 'sergeant' then --Ajout de tenue par grades
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
@@ -144,7 +150,7 @@ function OpenCloakroomMenu()
 
 			end
 
-			if data.current.value == 'lieutenant_wear' then
+			if data.current.value == 'lieutenant_wear' and PlayerData.job.grade_name == 'lieutenant' then --Ajout de tenue par grades
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
@@ -166,7 +172,7 @@ function OpenCloakroomMenu()
 
 			end
 
-			if data.current.value == 'commandant_wear' then
+			if data.current.value == 'commandant_wear' and  PlayerData.job.grade_name == 'boss' then --Ajout de tenue par grades
 
 				ESX.TriggerServerCallback('esx_skin:getPlayerSkin', function(skin, jobSkin)
 
@@ -357,13 +363,9 @@ function OpenVehicleSpawnerMenu(station, partNum)
 
 			local model = data.current.value
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = vehicles[partNum].SpawnPoint.x, 
-				y = vehicles[partNum].SpawnPoint.y, 
-				z = vehicles[partNum].SpawnPoint.z
-			})
+			local vehicle = GetClosestVehicle(vehicles[partNum].SpawnPoint.x,  vehicles[partNum].SpawnPoint.y,  vehicles[partNum].SpawnPoint.z,  3.0,  0,  71)
 
-			if distance > 3.0 then
+			if not DoesEntityExist(vehicle) then
 
 				local playerPed = GetPlayerPed(-1)
 
@@ -448,7 +450,9 @@ function OpenPoliceActionsMenu()
 							{label = _U('search'),      	value = 'body_search'},
 							{label = _U('handcuff'), 		value = 'handcuff'},
 							{label = _U('put_in_vehicle'),  value = 'put_in_vehicle'},
-							{label = _U('fine'),            value = 'fine'}
+							{label = _U('out_the_vehicle'),  value = 'out_the_vehicle'},
+							{label = _U('fine'),            value = 'fine'},
+							{label = _U('code'), value = 'code_search'}
 						},
 					},
 					function(data2, menu2)
@@ -473,8 +477,16 @@ function OpenPoliceActionsMenu()
 								TriggerServerEvent('esx_policejob:putInVehicle', GetPlayerServerId(player))
 							end
 
+							if data2.current.value == 'out_the_vehicle' then
+							    TriggerServerEvent('esx_policejob:OutVehicle', GetPlayerServerId(player))
+							end
+
 							if data2.current.value == 'fine' then
 								OpenFineMenu(player)
+							end
+
+							if data2.current.value == 'code_search' then
+								TriggerServerEvent('esx_policejob:code', GetPlayerServerId(player))
 							end
 
 						else
@@ -503,9 +515,11 @@ function OpenPoliceActionsMenu()
 					},
 					function(data2, menu2)
 
-						local vehicle, distance = ESX.Game.GetClosestVehicle()
+						local playerPed = GetPlayerPed(-1)
+						local coords    = GetEntityCoords(playerPed)
+						local vehicle   = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
 
-						if distance ~= -1 and distance <= 3.0 then
+						if DoesEntityExist(vehicle) then
 
 							local vehicleData = ESX.Game.GetVehicleProperties(vehicle)
 
@@ -518,14 +532,10 @@ function OpenPoliceActionsMenu()
 					      local playerPed = GetPlayerPed(-1)
 					      local coords    = GetEntityCoords(playerPed)
 
-					      if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
+					      if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 3.0) then
 
-					        local vehicle, distance = ESX.Game.GetClosestVehicle({
-					        	x = coords.x,
-					        	y = coords.y,
-					        	z = coords.z
-					        })
-
+									local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  3.0,  0,  71)
+					        
 					        if DoesEntityExist(vehicle) then
 
 					        	Citizen.CreateThread(function()
@@ -593,7 +603,7 @@ function OpenPoliceActionsMenu()
 							x = x,
 							y = y,
 							z = z
-						}, 3.0, function(obj)
+						}, function(obj)
 							SetEntityHeading(obj, GetEntityHeading(playerPed))
 							PlaceObjectOnGroundProperly(obj)
 						end)
@@ -637,12 +647,12 @@ function OpenIdentityCardMenu(player)
 			table.insert(elements, {label = _U('bac') .. data.drunk .. '%', value = nil})
 		end
 
-		if data.licenses ~= nil then
+		if data.DmvTest ~= nil then
 
 			table.insert(elements, {label = '--- Licenses ---', value = nil})
 
-			for i=1, #data.licenses, 1 do
-				table.insert(elements, {label = data.licenses[i].label, value = nil})
+			for i=1, #data.DmvTest, 1 do
+				table.insert(elements, {label = data.DmvTest[i].label, value = nil})
 			end
 
 		end
@@ -753,7 +763,7 @@ function OpenFineMenu(player)
 			elements = {
 		  	{label = _U('traffic_offense'),   value = 0},
 		  	{label = _U('minor_offense'),     value = 1},
-		  	{label = _U('average_offense'),   value = 2},
+		  	{label = _U('average_offense'),   value = 2},	
 		  	{label = _U('major_offense'),     value = 3}
 			},
 		},
@@ -848,6 +858,18 @@ function OpenVehicleInfosMenu(vehicleData)
 	end, vehicleData.plate)
 
 end
+
+RegisterNetEvent('esx_policejob:OutVehicle')
+AddEventHandler('esx_policejob:OutVehicle', function(t)
+    local ped = GetPlayerPed(t)
+    ClearPedTasksImmediately(ped)
+    plyPos = GetEntityCoords(GetPlayerPed(-1),  true)
+    local xnew = plyPos.x+2
+    local ynew = plyPos.y+2
+   
+    SetEntityCoords(GetPlayerPed(-1), xnew, ynew, plyPos.z)
+end)
+
 
 function OpenGetWeaponMenu()
 
@@ -1106,14 +1128,9 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 	if part == 'HelicopterSpawner' then
 
 		local helicopters = Config.PoliceStations[station].Helicopters
-		
-		local vehicle, distance = ESX.Game.GetClosestVehicle({
-			x = helicopters[partNum].SpawnPoint.x, 
-			y = helicopters[partNum].SpawnPoint.y, 
-			z = helicopters[partNum].SpawnPoint.z
-		})
+		local vehicle     = GetClosestVehicle(helicopters[partNum].SpawnPoint.x, helicopters[partNum].SpawnPoint.y, helicopters[partNum].SpawnPoint.z,  3.0,  0,  71)
 
-		if distance > 3.0 then
+		if DoesEntityExist(vehicle) then
 
 			ESX.Game.SpawnVehicle('polmav', {
 				x = helicopters[partNum].SpawnPoint.x, 
@@ -1131,12 +1148,13 @@ AddEventHandler('esx_policejob:hasEnteredMarker', function(station, part, partNu
 	if part == 'VehicleDeleter' then
 
 		local playerPed = GetPlayerPed(-1)
+		local coords    = GetEntityCoords(playerPed)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle()
+			local vehicle = GetVehiclePedIsIn(playerPed, false)
 
-			if distance <= 2.0 then
+			if DoesEntityExist(vehicle) then
 				CurrentAction     = 'delete_vehicle'
 				CurrentActionMsg  = _U('store_vehicle')
 				CurrentActionData = {vehicle = vehicle}
@@ -1175,18 +1193,10 @@ AddEventHandler('esx_policejob:hasEnteredEntityZone', function(entity)
 
 		if IsPedInAnyVehicle(playerPed,  false) then
 
-			local vehicle, distance = ESX.Game.GetClosestVehicle({
-				x = coords.x,
-				y = coords.y,
-				z = coords.z
-			})
+			local vehicle = GetVehiclePedIsIn(playerPed)
 
-			if distance <= 1.0 then
-
-				for i=0, 7, 1 do
-					SetVehicleTyreBurst(vehicle,  i,  true,  1000)
-				end
-
+			for i=0, 7, 1 do
+				SetVehicleTyreBurst(vehicle,  i,  true,  1000)
 			end
 
 		end
@@ -1244,12 +1254,8 @@ AddEventHandler('esx_policejob:putInVehicle', function()
 
   if IsAnyVehicleNearPoint(coords.x, coords.y, coords.z, 5.0) then
 
-    local vehicle, distance = ESX.Game.GetClosestVehicle({
-    	x = coords.x,
-    	y = coords.y,
-    	z = coords.z
-    })
-
+		local vehicle = GetClosestVehicle(coords.x,  coords.y,  coords.z,  5.0,  0,  71)
+    
     if DoesEntityExist(vehicle) then
 
     	local maxSeats = GetVehicleMaxNumberOfPassengers(vehicle)

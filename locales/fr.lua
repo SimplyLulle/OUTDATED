@@ -32,8 +32,11 @@ Locales['fr'] = {
 		['id_card'] = 'carte d\'identité',
 		['search'] = 'fouiller',
 		['handcuff'] = 'menotter / Démenotter',
-		['put_in_vehicle'] = 'mettre dans véhicule',
+		['put_in_vehicle'] = 'mettre dans le véhicule',
+		['out_the_vehicle'] = 'sortir du véhicule',
+		['drag'] = 'Enmener le joueur',
 		['fine'] = 'Amende',
+		['code'] = 'Retirer Permis',
 		['no_players_nearby'] = 'aucun joueur à proximité',
 
 		['vehicle_info'] = 'infos véhicule',
